@@ -22,11 +22,12 @@
                 if(params.created){
                     params.created();
                 }
-                //2.  数据和视图的绑定
 
                 if(params.beforeMount){
                     params.beforeMount();
                 }
+
+                //2.  数据和视图的绑定
                 this.mount();
                 if(params.mounted){
                     params.mounted();
@@ -34,11 +35,12 @@
             }
 
             create(params) {
-                //创建对象并挂载实例
-                //将实例化对象挂载在vue的构造函数中，包括属性和方法，同时给每个属性添加get和set方法，进行监听，实现双向数据绑定
-                //此时的this中包含属性name:'zhangsan',age:'12',sex:'woman',包含的方法有aa,bb,cc,还有根元素el:'#root'以及各个属性的get、set方法。
+                //创建对象并挂载属性
+                //将实例化对象的属性挂载在vue的构造函数中，同时给每个属性添加get和set方法，进行监听，实现双向数据绑定
+                //此时的this中包含属性name:'zhangsan',age:'12',sex:'woman',还有根元素el:'#root'以及各个属性的get、set方法。
                 var that = this;
                 var obj = {};
+                console.log(params.data)
                 for (var i in params.data) {
                     obj[i] = {
                         get: (function (i) {
@@ -76,7 +78,7 @@
             }
 
             mount(){
-                //视图和数据进行绑定，视图是页面DOM元素，数据是this对象中的属性和方法
+                //视图和数据进行绑定，视图是页面DOM元素，数据是this对象中的属性
                 //将视图进行获取，并且通过this对象的属性将其中相对应的变量进行赋值，同时将页面中的@click事件进行转换，给相对应的DOM元素添加点击事件
                 this.root=document.querySelector(this.el);
 
@@ -97,12 +99,13 @@
                 this.root.innerHTML=(fn(this));
 
                 //将视图中的点击事件绑定在this中
-                //获取视图元素objs为DOM元素
+                //获取视图中的元素objs为DOM元素
                 var objs=document.querySelectorAll("[uek-click]");
                 for(var i=0;i<objs.length;i++){
                     var fn=objs[i].getAttribute("uek-click"); //fn:aa,bb,cc
                     var that=this;
-                    //将this中的aa,bb,cc方法赋值给objs中
+                    //将this中的aa,bb,cc方法绑定给objs中
+                    //objs[i]为DOM元素
                     objs[i].fn=this[fn];
                     //给DOM元素添加点击事件
                     objs[i].onclick=function(){
@@ -145,24 +148,6 @@
             cc(){
                 this.sex="man"
             }
-        },
-        beforeCreate(){
-            console.log(1);
-        },
-        created(){
-            console.log(2);
-        },
-        beforeMount(){
-            console.log(3);
-        },
-        mounted(){
-            console.log(4);
-        },
-        beforeUpdate(){
-            console.log(5);
-        },
-        updated(){
-            console.log(6);
         }
     })
 
